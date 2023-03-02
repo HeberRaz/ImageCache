@@ -16,11 +16,7 @@ class ImageProvider {
     private init() {}
 
     public func fetchImage(completion: @escaping (UIImage?) -> Void) {
-        if let image = cache.object(forKey: "image") {
-            debugPrint("Use cache")
-            completion(image)
-            return
-        }
+        guard shouldUseUrl(completion: completion) else { return }
         guard let url = URL(string: "https://source.unsplash.com/random/500x500") else {
             return
         }
@@ -31,15 +27,26 @@ class ImageProvider {
                 completion(nil)
                 return
             }
-            DispatchQueue.main.async {
-                guard let image = UIImage(data: data) else {
-                    completion(nil)
-                    return
-                }
-                self?.cache.setObject(image, forKey: "image")
-                completion(image)
-            }
+            self?.completeWithData(data, completion: completion)
         }
         task.resume()
+    }
+
+    private func shouldUseUrl(completion: (UIImage?) -> Void) -> Bool {
+        guard let image = cache.object(forKey: "image") else { return true }
+        debugPrint("Use cache")
+        completion(image)
+        return false
+    }
+
+    private func completeWithData(_ data: Data, completion: @escaping (UIImage?) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            guard let image = UIImage(data: data) else {
+                completion(nil)
+                return
+            }
+            self?.cache.setObject(image, forKey: "image")
+            completion(image)
+        }
     }
 }

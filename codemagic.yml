@@ -1,0 +1,12 @@
+# Customize the codemagic.yml file according to your project and commit it to the root of your repository
+# Check out https://docs.codemagic.io/getting-started/yaml for more information
+workflows:
+  imageCache-workflow:
+  name: ImageCache Pipeline
+  scripts:
+    - name: CI/CD Started
+      script: echo "Welcome to your CICD setup!"
+  publishing:
+    email: 
+      recipients:
+       - heber.raz@gmail.com
