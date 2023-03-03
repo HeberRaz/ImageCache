@@ -9,7 +9,7 @@ workflows:
       - name: Build ImageCache
         script: |
           xcodebuild build \
-            -project "ImageCache/Cache/Cache.xcodeproj"
+            -project "Cache/Cache.xcodeproj"
             -scheme "Cache"
             CODE_SIGNING_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
